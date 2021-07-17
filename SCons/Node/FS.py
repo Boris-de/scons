@@ -2573,17 +2573,15 @@ class FileBuildInfo(SCons.Node.BuildInfoBase):
         usual string representation: relative to the top-level SConstruct
         directory, or an absolute path if it's outside.
         """
-        if os_sep_is_slash:
-            node_to_str = str
-        else:
-            def node_to_str(n):
-                try:
-                    s = n.get_internal_path()
-                except AttributeError:
-                    s = str(n)
-                else:
+        def node_to_str(n):
+            try:
+                s = n.get_internal_path()
+            except AttributeError:
+                s = str(n)
+            else:
+                if not os_sep_is_slash:
                     s = s.replace(OS_SEP, '/')
-                return s
+            return s
         for attr in ['bsources', 'bdepends', 'bimplicit']:
             try:
                 val = getattr(self, attr)
